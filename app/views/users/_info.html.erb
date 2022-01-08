@@ -10,24 +10,28 @@
 	  <th>introduction</th>
 	  <th><%= user.introduction %></th>
   </tr>
-  <tr>
-    <th>Follow</th>
-    <th><%= link_to user.followings.count, user_followings_path(user) %></th>
-  </tr>
-  <tr>
-    <th>Follower</th>
-    <th><%= link_to user.followers.count, user_followers_path(user) %></th>
-  </tr>
+  <% if !(user.name == "guestuser") %>
+    <tr>
+      <th>Follow</th>
+      <th><%= link_to user.followings.count, user_followings_path(user) %></th>
+    </tr>
+    <tr>
+      <th>Follower</th>
+      <th><%= link_to user.followers.count, user_followers_path(user) %></th>
+    </tr>
+  <% end %>
 </table>
 
-<div class="row">
-  <% if current_user != user %>
-    <% if current_user.following?(user) %>
-      <%= link_to "Unfollow", user_relationships_path(user.id), method: :delete, class: "btn btn-info rounded-pill btn-block" %>
+<% if !(user.name == "guestuser") %>
+  <div class="row">
+    <% if current_user != user %>
+      <% if current_user.following?(user) %>
+        <%= link_to "Unfollow", user_relationships_path(user.id), method: :delete, class: "btn btn-info rounded-pill btn-block" %>
+      <% else %>
+        <%= link_to "Follow", user_relationships_path(user.id), method: :post, class: "btn btn-success rounded-pill btn-block" %>
+      <% end %>
     <% else %>
-      <%= link_to "Follow", user_relationships_path(user.id), method: :post, class: "btn btn-success rounded-pill btn-block" %>
+      <%= link_to '',edit_user_path(user),class: "btn btn-outline-secondary btn-block fas fa-user-cog edit_user_#{user.id}" %>
     <% end %>
-  <% else %>
-    <%= link_to '',edit_user_path(user),class: "btn btn-outline-secondary btn-block fas fa-user-cog edit_user_#{user.id}" %>
-  <% end %>
-</div>
+  </div>
+<% end %>
