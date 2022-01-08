@@ -42,6 +42,16 @@ class User < ApplicationRecord
       User.where('name LIKE ?', '%' + content + '%')
     end
   end
+  
+  # ゲストログイン関連
+  def self.guest
+    # ()内の条件と合致するデータがある場合はそれを返し、ない場合は新規作成
+    find_or_create_by!(name: 'guestuser', email: 'guest@example.com') do |user|
+      # ランダムな文字列を生成するRubyのメソッド
+      user.password = SecureRandom.urlsafe_base64
+      user.name = "guestuser"
+    end
+  end
 
   validates :name, presence: true, uniqueness: true, length: {minimum: 2, maximum: 20}
   validates :introduction, length: {maximum: 50}
